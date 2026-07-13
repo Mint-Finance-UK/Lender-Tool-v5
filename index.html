@@ -29,6 +29,9 @@
             justify-content: space-between;
             padding: 0 2rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 300;
         }
 
         .header h1 {
@@ -73,10 +76,10 @@
         }
 
         /* Sticky wrapper: pins the filter panel and the results header row
-           together as one block, so no offset maths between two sticky bars. */
+           together as one block, offset below the 60px title bar. */
         .sticky-panel {
             position: sticky;
-            top: 0;
+            top: 60px;
             z-index: 200;
             background: #f5f6fa;
             padding: 1rem 1rem 0.5rem;
