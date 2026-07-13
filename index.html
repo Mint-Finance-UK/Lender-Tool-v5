@@ -699,13 +699,18 @@
             return value.toString().replace(/\s+/g, ' ').trim();
         }
 
-        // The xlsx header was originally misspelled "Preffered Lender". Accept
-        // either spelling so the tool doesn't break if an older CSV is deployed.
+        // This header has been spelled three different ways across the xlsx and
+        // CSV ("Preferred Lender", "Preffered Lender", "Prefered Lender"), so
+        // match on shape rather than an exact string: the only header that
+        // starts "pref" and ends "lender" is this one.
         function preferredLenderValue(row) {
-            if (row['Preferred Lender'] !== undefined && row['Preferred Lender'] !== null) {
-                return row['Preferred Lender'];
+            for (const key of Object.keys(row)) {
+                const k = key.toLowerCase().replace(/[^a-z]/g, '');
+                if (k.startsWith('pref') && k.endsWith('lender')) {
+                    return row[key];
+                }
             }
-            return row['Preffered Lender'];
+            return undefined;
         }
 
         // Helper: detect a row that is structurally empty (all values blank,
