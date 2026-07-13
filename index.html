@@ -72,11 +72,21 @@
             background: #c82333;
         }
 
+        /* Sticky wrapper: pins the filter panel and the results header row
+           together as one block, so no offset maths between two sticky bars. */
+        .sticky-panel {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: #f5f6fa;
+            padding: 1rem 1rem 0.5rem;
+        }
+
         /* Filter Section Styles */
         .filter-container {
             background: #f8f9fa;
             border: 4px solid #5affc4;
-            margin: 1rem;
+            margin: 0 0 0.5rem 0;
             border-radius: 8px;
             overflow: visible;
         }
@@ -298,7 +308,7 @@
 
         /* Results Styles */
         .results-container {
-            margin: 1rem;
+            margin: 0 1rem 1rem;
         }
 
         .results-row {
@@ -314,10 +324,6 @@
             font-size: 0.85rem;
             border-radius: 8px;
             padding: 0.4rem 0.25rem;
-            margin-bottom: 0.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -441,6 +447,10 @@
             .lender-card > div {
                 padding: 0.25rem 0.35rem;
             }
+            /* A stacked filter panel would swallow the viewport if pinned. */
+            .sticky-panel {
+                position: static;
+            }
         }
 
         @media (max-width: 768px) {
@@ -471,6 +481,9 @@
             <button class="header-clear-filters" onclick="clearAllFilters()">Clear Filters</button>
         </div>
     </div>
+
+    <!-- Frozen block: filter panel + results header row -->
+    <div class="sticky-panel">
 
     <!-- Filter Section: 2 x 6 grid -->
     <div class="filter-container">
@@ -585,16 +598,20 @@
         </div>
     </div>
 
+    <div class="results-row results-header">
+        <div>Lender</div>
+        <div>Funding Terms</div>
+        <div>Security Required</div>
+        <div>Key U/W Criteria</div>
+        <div>Adverse</div>
+        <div>Product USP</div>
+    </div>
+
+    </div>
+    <!-- End frozen block -->
+
     <!-- Results Section -->
     <div class="results-container">
-        <div class="results-row results-header">
-            <div>Lender</div>
-            <div>Funding Terms</div>
-            <div>Security Required</div>
-            <div>Key U/W Criteria</div>
-            <div>Adverse</div>
-            <div>Product USP</div>
-        </div>
         <div id="resultsList"></div>
     </div>
 
