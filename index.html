@@ -86,28 +86,27 @@
             overflow: visible;
         }
 
-        .filter-rows {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .filter-row {
+        /* 2 x 6 grid: six inputs on row 1, five radio groups on row 2 */
+        .filter-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 0.5rem;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
-        .filter-group label {
+        .filter-group > label {
             font-weight: 600;
             margin-bottom: 0.15rem;
             color: #172c40;
             font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Input Styles */
@@ -141,7 +140,8 @@
             cursor: pointer;
             height: 38px;
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow: hidden;
             gap: 0.25rem;
             align-items: center;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -160,6 +160,7 @@
         .multi-select-display::after {
             content: "▼";
             margin-left: auto;
+            padding-left: 0.25rem;
             color: #6c757d;
             font-size: 0.8rem;
             transition: transform 0.2s;
@@ -174,6 +175,7 @@
             font-size: 0.85rem;
             font-weight: normal;
             opacity: 1;
+            white-space: nowrap;
         }
 
         .multi-select-tag {
@@ -181,16 +183,27 @@
             color: #172c40;
             padding: 0.25rem 0.5rem;
             border-radius: 12px;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             font-weight: 500;
             display: flex;
             align-items: center;
             gap: 0.25rem;
+            white-space: nowrap;
         }
 
         .multi-select-tag .remove {
             cursor: pointer;
             font-weight: bold;
+        }
+
+        .multi-select-count {
+            background: #172c40;
+            color: #5affc4;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
         }
 
         .multi-select-dropdown {
@@ -214,134 +227,119 @@
         }
 
         .multi-select-option {
-            padding: 0.75rem;
+            padding: 0.5rem 0.75rem;
             cursor: pointer;
             transition: background-color 0.2s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             border-bottom: 1px solid #f8f9fa;
+            font-size: 0.85rem;
         }
 
         .multi-select-option:hover {
             background-color: #f8f9fa;
         }
 
-        /* Single Select Styles */
-        .single-select {
-            position: relative;
-        }
-
-        .single-select-display {
-            padding: 0.4rem;
+        /* Segmented Radio Styles */
+        .segmented {
+            display: flex;
             border: 2px solid #dee2e6;
             border-radius: 4px;
             background: white;
-            cursor: pointer;
             height: 38px;
+            overflow: hidden;
+        }
+
+        .segmented input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        .segmented label {
+            flex: 1;
             display: flex;
             align-items: center;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            width: 100%;
-            font-size: 0.85rem;
-            font-family: inherit;
-        }
-
-        .single-select-display::after {
-            content: "▼";
-            margin-left: auto;
-            color: #6c757d;
-            font-size: 0.8rem;
-            transition: transform 0.2s;
-        }
-
-        .single-select.open .single-select-display::after {
-            transform: rotate(180deg);
-        }
-
-        .single-select-placeholder {
-            color: #6c757d;
-            font-size: 0.85rem;
-            font-weight: normal;
-            opacity: 1;
-        }
-
-        .single-select-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 2px solid #5affc4;
-            border-top: none;
-            border-radius: 0 0 4px 4px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 9999;
-            display: none;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .single-select-dropdown.show {
-            display: block;
-        }
-
-        .single-select-option {
-            padding: 0.75rem;
+            justify-content: center;
+            font-size: 0.78rem;
             cursor: pointer;
-            transition: background-color 0.2s;
-            border-bottom: 1px solid #f8f9fa;
+            color: #172c40;
+            border-left: 2px solid #dee2e6;
+            padding: 0 0.15rem;
+            text-align: center;
+            line-height: 1.1;
+            transition: background-color 0.15s;
         }
 
-        .single-select-option:hover {
-            background-color: #f8f9fa;
+        .segmented label:first-of-type {
+            border-left: none;
         }
 
-        /* Results Table Styles */
+        .segmented label:hover {
+            background: #eef1f3;
+        }
+
+        .segmented input[type="radio"]:checked + label {
+            background: #5affc4;
+            font-weight: 600;
+        }
+
+        .segmented input[type="radio"]:checked + label:hover {
+            background: #5affc4;
+        }
+
+        .segmented input[type="radio"]:focus-visible + label {
+            outline: 2px solid #172c40;
+            outline-offset: -2px;
+        }
+
+        /* Results Styles */
         .results-container {
             margin: 1rem;
         }
 
-        .results-table {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .results-row {
+            display: grid;
+            grid-template-columns: 13% 18% 14% 21% 13% 21%;
+            gap: 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        th, td {
-            padding: 0.3rem 0.25rem;
-            text-align: left;
-            border-bottom: 3px solid #dee2e6;
-            font-size: 0.85rem;
-            vertical-align: top;
-            word-wrap: break-word;
-        }
-
-        th:last-child, td:last-child {
-            border-right: none;
-        }
-
-        th:nth-child(1), td:nth-child(1) { width: 13% !important; }  /* Lender */
-        th:nth-child(2), td:nth-child(2) { width: 18% !important; }  /* Funding Terms */
-        th:nth-child(3), td:nth-child(3) { width: 14% !important; }  /* Security Required */
-        th:nth-child(4), td:nth-child(4) { width: 21% !important; }  /* Key U/W Criteria */
-        th:nth-child(5), td:nth-child(5) { width: 13% !important; }  /* Adverse */
-        th:nth-child(6), td:nth-child(6) { width: 21% !important; }  /* Product USP */
-
-        th {
+        .results-header {
             background: #172c40;
             color: white;
             font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            padding: 0.4rem 0.25rem;
+            margin-bottom: 0.5rem;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .results-header > div {
+            padding: 0 0.35rem;
+        }
+
+        .lender-card {
+            background: white;
+            border: 1px solid #e6e8eb;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.5rem 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .lender-card > div {
+            padding: 0 0.35rem;
+            font-size: 0.85rem;
+            min-width: 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .lender-name {
@@ -357,7 +355,7 @@
             padding: 0.25rem 0.5rem;
             border-radius: 12px;
             font-size: 0.8rem;
-            margin: 0.125rem;
+            margin: 0.125rem 0;
             white-space: nowrap;
         }
 
@@ -366,31 +364,6 @@
             text-decoration: none;
             text-align: left;
             display: inline-block;
-        }
-
-        /* Panel Indicator Styles */
-        .panel-indicators {
-            display: flex;
-            gap: 0.25rem;
-            margin-top: 0.25rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .panel-indicator {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .panel-indicator.mint-finance {
-            background-color: #172c40;
-            color: #5affc4;
         }
 
         .amount-range {
@@ -425,6 +398,9 @@
         }
 
         .no-results {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
             padding: 3rem;
             color: #6c757d;
@@ -446,20 +422,35 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1400px) {
+            .filter-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
         @media (max-width: 1024px) {
-            .filter-row {
-                grid-template-columns: repeat(3, 1fr);
+            .filter-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .results-row {
+                grid-template-columns: 1fr;
+            }
+            .results-header {
+                display: none;
+            }
+            .lender-card > div {
+                padding: 0.25rem 0.35rem;
             }
         }
 
         @media (max-width: 768px) {
-            .filter-row {
-                grid-template-columns: repeat(2, 1fr);
+            .filter-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
 
         @media (max-width: 480px) {
-            .filter-row {
+            .filter-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -481,103 +472,130 @@
         </div>
     </div>
 
-    <!-- Filter Section -->
+    <!-- Filter Section: 2 x 6 grid -->
     <div class="filter-container">
         <div class="filter-content">
-            <div class="filter-rows">
-                <!-- Row 1: Lender, Loan Amount, Company Trading, PG Required -->
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label for="lenderSelect">Lender</label>
-                        <div class="multi-select" id="lenderSelect">
-                            <div class="multi-select-display" onclick="toggleMultiSelect('lender')">
-                                <span class="multi-select-placeholder">Select lender...</span>
-                            </div>
-                            <div class="multi-select-dropdown" id="lenderDropdown"></div>
+            <div class="filter-grid">
+
+                <!-- Row 1: six inputs -->
+                <div class="filter-group">
+                    <label for="lenderSelect">Lender</label>
+                    <div class="multi-select" id="lenderSelect">
+                        <div class="multi-select-display" onclick="toggleMultiSelect('lender')">
+                            <span class="multi-select-placeholder">Select lender...</span>
                         </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="loanAmount">Loan Amount (£)</label>
-                        <input type="number" id="loanAmount" class="filter-input" placeholder="Enter loan amount..." min="0" max="5000000" step="1000">
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="tradingTime">Company Trading (Months)</label>
-                        <input type="number" id="tradingTime" class="filter-input" placeholder="Enter trading timeframe in months..." min="0">
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="pgRequirement">PG Required</label>
-                        <div class="single-select" id="pgRequirementSelect">
-                            <div class="single-select-display" onclick="toggleSingleSelect('pgRequirement')">
-                                <span class="single-select-placeholder">Select PG required...</span>
-                            </div>
-                            <div class="single-select-dropdown" id="pgRequirementDropdown">
-                                <div class="single-select-option" onclick="selectSingleOption('pgRequirement', 'yes')">Yes</div>
-                                <div class="single-select-option" onclick="selectSingleOption('pgRequirement', 'no')">No</div>
-                            </div>
-                        </div>
+                        <div class="multi-select-dropdown" id="lenderDropdown"></div>
                     </div>
                 </div>
 
-                <!-- Row 2: Product Type, Loan Term, Company Turnover, Homeowner Requirement -->
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label for="productType">Product Type</label>
-                        <div class="multi-select" id="productTypeSelect">
-                            <div class="multi-select-display" onclick="toggleMultiSelect('productType')">
-                                <span class="multi-select-placeholder">Select product type...</span>
-                            </div>
-                            <div class="multi-select-dropdown" id="productTypeDropdown"></div>
+                <div class="filter-group">
+                    <label for="productTypeSelect">Product Type</label>
+                    <div class="multi-select" id="productTypeSelect">
+                        <div class="multi-select-display" onclick="toggleMultiSelect('productType')">
+                            <span class="multi-select-placeholder">Select product type...</span>
                         </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="termMonths">Loan Term (Months)</label>
-                        <input type="number" id="termMonths" class="filter-input" placeholder="Enter term in months..." min="0">
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="monthlyTurnover">Company Turnover (£ per month)</label>
-                        <input type="number" id="monthlyTurnover" class="filter-input" placeholder="Enter monthly turnover..." min="0" max="5000000" step="1000">
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="homeownerRequirement">Homeowner Required</label>
-                        <div class="single-select" id="homeownerRequirementSelect">
-                            <div class="single-select-display" onclick="toggleSingleSelect('homeownerRequirement')">
-                                <span class="single-select-placeholder">Select homeowner required...</span>
-                            </div>
-                            <div class="single-select-dropdown" id="homeownerRequirementDropdown">
-                                <div class="single-select-option" onclick="selectSingleOption('homeownerRequirement', 'yes')">Yes</div>
-                                <div class="single-select-option" onclick="selectSingleOption('homeownerRequirement', 'no')">No</div>
-                            </div>
-                        </div>
+                        <div class="multi-select-dropdown" id="productTypeDropdown"></div>
                     </div>
                 </div>
+
+                <div class="filter-group">
+                    <label for="loanAmount">Loan Amount (£)</label>
+                    <input type="number" id="loanAmount" class="filter-input" placeholder="Enter loan amount..." min="0" max="5000000" step="1000">
+                </div>
+
+                <div class="filter-group">
+                    <label for="termMonths">Loan Term (Months)</label>
+                    <input type="number" id="termMonths" class="filter-input" placeholder="Enter term in months..." min="0">
+                </div>
+
+                <div class="filter-group">
+                    <label for="tradingTime">Company Trading (Months)</label>
+                    <input type="number" id="tradingTime" class="filter-input" placeholder="Enter trading months..." min="0">
+                </div>
+
+                <div class="filter-group">
+                    <label for="monthlyTurnover">Company Turnover (£ per month)</label>
+                    <input type="number" id="monthlyTurnover" class="filter-input" placeholder="Enter monthly turnover..." min="0" max="5000000" step="1000">
+                </div>
+
+                <!-- Row 2: five radio groups, one blank cell -->
+                <div class="filter-group">
+                    <label>Product Security</label>
+                    <div class="segmented" role="radiogroup" aria-label="Product Security">
+                        <input type="radio" name="productSecurity" id="productSecurity_any" value="any" checked onchange="setRadioFilter('productSecurity', this.value)">
+                        <label for="productSecurity_any">Any</label>
+                        <input type="radio" name="productSecurity" id="productSecurity_secured" value="secured" onchange="setRadioFilter('productSecurity', this.value)">
+                        <label for="productSecurity_secured">Secured</label>
+                        <input type="radio" name="productSecurity" id="productSecurity_unsecured" value="unsecured" onchange="setRadioFilter('productSecurity', this.value)">
+                        <label for="productSecurity_unsecured">Unsecured</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Start Up Loan</label>
+                    <div class="segmented" role="radiogroup" aria-label="Start Up Loan">
+                        <input type="radio" name="startUp" id="startUp_any" value="any" checked onchange="setRadioFilter('startUp', this.value)">
+                        <label for="startUp_any">Any</label>
+                        <input type="radio" name="startUp" id="startUp_yes" value="yes" onchange="setRadioFilter('startUp', this.value)">
+                        <label for="startUp_yes">Yes</label>
+                        <input type="radio" name="startUp" id="startUp_no" value="no" onchange="setRadioFilter('startUp', this.value)">
+                        <label for="startUp_no">No</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>PG Required</label>
+                    <div class="segmented" role="radiogroup" aria-label="PG Required">
+                        <input type="radio" name="pgRequirement" id="pgRequirement_any" value="any" checked onchange="setRadioFilter('pgRequirement', this.value)">
+                        <label for="pgRequirement_any">Any</label>
+                        <input type="radio" name="pgRequirement" id="pgRequirement_yes" value="yes" onchange="setRadioFilter('pgRequirement', this.value)">
+                        <label for="pgRequirement_yes">Yes</label>
+                        <input type="radio" name="pgRequirement" id="pgRequirement_no" value="no" onchange="setRadioFilter('pgRequirement', this.value)">
+                        <label for="pgRequirement_no">No</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Debt Consolidation</label>
+                    <div class="segmented" role="radiogroup" aria-label="Debt Consolidation">
+                        <input type="radio" name="debtConsolidation" id="debtConsolidation_any" value="any" checked onchange="setRadioFilter('debtConsolidation', this.value)">
+                        <label for="debtConsolidation_any">Any</label>
+                        <input type="radio" name="debtConsolidation" id="debtConsolidation_yes" value="yes" onchange="setRadioFilter('debtConsolidation', this.value)">
+                        <label for="debtConsolidation_yes">Yes</label>
+                        <input type="radio" name="debtConsolidation" id="debtConsolidation_no" value="no" onchange="setRadioFilter('debtConsolidation', this.value)">
+                        <label for="debtConsolidation_no">No</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Homeowner Required</label>
+                    <div class="segmented" role="radiogroup" aria-label="Homeowner Required">
+                        <input type="radio" name="homeownerRequirement" id="homeownerRequirement_any" value="any" checked onchange="setRadioFilter('homeownerRequirement', this.value)">
+                        <label for="homeownerRequirement_any">Any</label>
+                        <input type="radio" name="homeownerRequirement" id="homeownerRequirement_yes" value="yes" onchange="setRadioFilter('homeownerRequirement', this.value)">
+                        <label for="homeownerRequirement_yes">Yes</label>
+                        <input type="radio" name="homeownerRequirement" id="homeownerRequirement_no" value="no" onchange="setRadioFilter('homeownerRequirement', this.value)">
+                        <label for="homeownerRequirement_no">No</label>
+                    </div>
+                </div>
+
+                <div class="filter-group"></div>
+
             </div>
         </div>
     </div>
 
     <!-- Results Section -->
     <div class="results-container">
-        <div class="results-table">
-            <table id="resultsTable">
-                <thead>
-                    <tr>
-                        <th>Lender</th>
-                        <th>Funding Terms</th>
-                        <th>Security Required</th>
-                        <th>Key U/W Criteria</th>
-                        <th>Adverse</th>
-                        <th>Product USP</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsTableBody">
-                </tbody>
-            </table>
+        <div class="results-row results-header">
+            <div>Lender</div>
+            <div>Funding Terms</div>
+            <div>Security Required</div>
+            <div>Key U/W Criteria</div>
+            <div>Adverse</div>
+            <div>Product USP</div>
         </div>
+        <div id="resultsList"></div>
     </div>
 
     <!-- Footer -->
@@ -589,7 +607,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <script>
-        const DATA_VERSION = '5.0';
+        const DATA_VERSION = '6.0';
 
         let csvData = [];
         let lenderData = [];
@@ -598,12 +616,20 @@
         let selectedProductTypes = [];
         let allLenders = [];
         let allProductTypes = [];
-        let selectedPgRequirement = '';
-        let selectedHomeownerRequirement = '';
         let domElements = {};
 
+        // Radio filter state. 'any' means no filtering on that field.
+        const RADIO_DEFAULTS = {
+            productSecurity: 'any',
+            startUp: 'any',
+            pgRequirement: 'any',
+            debtConsolidation: 'any',
+            homeownerRequirement: 'any'
+        };
+        let radioFilters = Object.assign({}, RADIO_DEFAULTS);
+
         // ──────────────────────────────────────────────────────────────────
-        // NEW: Currency-tolerant numeric parser.
+        // Currency-tolerant numeric parser.
         // Accepts: 10000, "10000", "£10,000", "£10,000.00", " 10,000 ", "",
         // null, undefined, true/false (booleans). Returns NaN ONLY when the
         // input genuinely cannot be interpreted as a number.
@@ -619,6 +645,22 @@
             return num;
         }
 
+        // Normalise a free-text cell for comparison: trim + lowercase.
+        // The CSV has casing and trailing-space inconsistencies (e.g. "secured",
+        // "Secured ", "Unsecured "), so every categorical comparison goes
+        // through this rather than matching raw strings.
+        function normaliseValue(value) {
+            if (value === null || value === undefined) return '';
+            return value.toString().trim().toLowerCase();
+        }
+
+        // Tidy a categorical value for display / dropdown grouping: trim and
+        // collapse internal whitespace, but preserve the author's casing.
+        function tidyValue(value) {
+            if (value === null || value === undefined) return '';
+            return value.toString().replace(/\s+/g, ' ').trim();
+        }
+
         // Helper: detect a row that is structurally empty (all values blank,
         // null, or undefined). Catches Excel's comma-only padding rows that
         // PapaParse doesn't strip via skipEmptyLines.
@@ -632,51 +674,55 @@
         function validateCSVData(csvRows) {
             const errors = [];
             const warnings = [];
-            
+
             csvRows.forEach((row, index) => {
                 const rowNum = index + 2;
-                
+
                 if (!row['Lender'] || row['Lender'].toString().trim() === '') {
                     errors.push(`Row ${rowNum}: Lender name is required`);
                 }
-                
+
                 if (!row['Product Type'] || row['Product Type'].toString().trim() === '') {
                     warnings.push(`Row ${rowNum}: Product Type is missing`);
                 }
-                
+
                 const numericFields = ['Min Loan', 'Max Loan', 'Min Term', 'Max Term', 'Min Trading Months', 'Min Monthly Turnover'];
                 numericFields.forEach(field => {
                     const value = row[field];
                     if (value !== '' && value !== null && value !== undefined) {
-                        // CHANGED: use parseNumericValue so "£10,000" is valid.
                         const numValue = parseNumericValue(value);
                         if (isNaN(numValue) || numValue < 0) {
                             errors.push(`Row ${rowNum}: ${field} must be a valid positive number (found: "${value}")`);
                         }
                     }
                 });
-                
-                
+
                 const minLoan = parseNumericValue(row['Min Loan']) || 0;
                 const maxLoan = parseNumericValue(row['Max Loan']) || 0;
                 if (minLoan > 0 && maxLoan > 0 && minLoan > maxLoan) {
                     errors.push(`Row ${rowNum}: Min Loan (${minLoan}) cannot be greater than Max Loan (${maxLoan})`);
                 }
-                
+
                 const minTerm = parseNumericValue(row['Min Term']) || 0;
                 const maxTerm = parseNumericValue(row['Max Term']) || 0;
                 if (minTerm > 0 && maxTerm > 0 && minTerm > maxTerm) {
                     errors.push(`Row ${rowNum}: Min Term (${minTerm}) cannot be greater than Max Term (${maxTerm})`);
                 }
-                
-                const booleanFields = ['Homeowner Required', 'PG Required', 'Existing Lending Required'];
+
+                const booleanFields = ['Homeowner Required', 'PG Required', 'Existing Lending Required',
+                                       'Debt Consolidation Option?', 'StartUp Option?'];
                 booleanFields.forEach(field => {
                     const value = row[field];
-                    if (value && !['yes', 'no', 'true', 'false', 'not stated', 'case-by-case', 'n/a', ''].includes(value.toString().toLowerCase()) && value !== true && value !== false) {
+                    if (value && !['yes', 'no', 'true', 'false', 'not stated', 'case-by-case', 'n/a', ''].includes(normaliseValue(value)) && value !== true && value !== false) {
                         errors.push(`Row ${rowNum}: ${field} must be Yes/No or TRUE/FALSE (found: "${value}")`);
                     }
                 });
-                
+
+                const security = row['Product Security'];
+                if (security && !['secured', 'unsecured', ''].includes(normaliseValue(security))) {
+                    warnings.push(`Row ${rowNum}: Product Security should be Secured or Unsecured (found: "${security}")`);
+                }
+
                 const submission = row['Submission'];
                 if (submission && submission.toString().trim() !== '') {
                     const trimmedSubmission = submission.toString().trim();
@@ -685,50 +731,50 @@
                     }
                 }
             });
-            
+
             return { errors, warnings };
         }
 
         async function loadLenderDataFromCSV() {
             try {
                 showLoadingState();
-                
+
                 const response = await fetch(`Lender-Data.csv?v=${DATA_VERSION}&t=${Date.now()}`);
-                
+
                 if (!response.ok) {
                     throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
                 }
-                
+
                 const csvText = await response.text();
-                
+
                 const parsed = Papa.parse(csvText, {
                     header: true,
-                    skipEmptyLines: 'greedy',  // CHANGED: 'greedy' also strips lines that are just whitespace/commas
+                    skipEmptyLines: 'greedy',
                     trimHeaders: true,
                     dynamicTyping: true,
                     transformHeader: function(header) {
                         return header.trim();
                     }
                 });
-                
+
                 if (parsed.errors.length > 0) {
                     console.warn('CSV parsing warnings:', parsed.errors);
                 }
-                
-                // NEW: belt-and-braces filter for Excel comma-only padding rows
+
+                // Belt-and-braces filter for Excel comma-only padding rows
                 // that slip past 'greedy' (rows where every field is null/blank).
                 csvData = parsed.data.filter(row => !isRowEffectivelyEmpty(row));
-                
+
                 lenderData = convertCSVToInternalFormat(csvData);
                 filteredData = [...lenderData];
-                
+
                 parseData();
                 hideLoadingState();
                 initializeFilters();
                 renderResults();
-                
+
                 console.log(`Loaded ${lenderData.length} lender products from CSV`);
-                
+
             } catch (error) {
                 console.error('Error loading CSV data:', error);
                 showErrorState(error.message);
@@ -737,19 +783,18 @@
 
         function convertCSVToInternalFormat(csvRows) {
             const validation = validateCSVData(csvRows);
-            
+
             if (validation.errors.length > 0) {
                 console.error('CSV Data Validation Errors:', validation.errors);
                 throw new Error(`CSV contains ${validation.errors.length} validation error(s):\n${validation.errors.join('\n')}`);
             }
-            
+
             if (validation.warnings.length > 0) {
                 console.warn('CSV Data Validation Warnings:', validation.warnings);
             }
-            
+
             return csvRows.map((row, index) => {
                 try {
-                    // CHANGED: parse via parseNumericValue so "£10,000" → 10000.
                     const minLoan = Math.max(0, parseNumericValue(row['Min Loan']) || 0);
                     const maxLoan = Math.max(0, parseNumericValue(row['Max Loan']) || 0);
                     const minTerm = Math.max(0, parseNumericValue(row['Min Term']) || 0);
@@ -765,7 +810,7 @@
 
                     return {
                         LENDER: (row['Lender'] || '').toString().trim(),
-                        PRODUCT_TYPE: (row['Product Type'] || '').toString().trim(),
+                        PRODUCT_TYPE: tidyValue(row['Product Type']),
                         PRODUCT_NAME: (row['Product Name'] || '').toString().trim(),
                         MIN_LOAN: `£${minLoan.toLocaleString()}.00`,
                         MAX_LOAN: `£${maxLoan.toLocaleString()}.00`,
@@ -789,6 +834,10 @@
                         PRODUCT_USP: (row['Product USP'] || '').toString().trim(),
                         SUBMISSION: (row['Submission'] || '').toString().trim(),
                         LAST_UPDATED: (row['Last Updated'] !== true && row['Last Updated'] !== false && row['Last Updated'] != null) ? row['Last Updated'].toString().trim() : '',
+                        // Filter-only fields (not displayed on the card)
+                        PRODUCT_SECURITY: normaliseValue(row['Product Security']),
+                        DEBT_CONSOLIDATION: normaliseValue(row['Debt Consolidation Option?']),
+                        START_UP: normaliseValue(row['StartUp Option?']),
                         MIN_LOAN_NUM: minLoan,
                         MAX_LOAN_NUM: maxLoan,
                         MIN_MONTHLY_TURNOVER: minTurnover
@@ -803,15 +852,15 @@
         function showLoadingState() {
             const loadingHtml = `
                 <div id="loadingIndicator" style="
-                    position: fixed; 
-                    top: 0; 
-                    left: 0; 
-                    width: 100%; 
-                    height: 100%; 
-                    background: rgba(245, 246, 250, 0.95); 
-                    display: flex; 
-                    align-items: center; 
-                    justify-content: center; 
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(245, 246, 250, 0.95);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     z-index: 10000;
                 ">
                     <div style="text-align: center; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -838,20 +887,20 @@
                         <p style="color: #6c757d; margin-bottom: 1rem;">Unable to load lender information:</p>
                         <p style="color: #dc3545; font-family: monospace; font-size: 0.9rem; margin-bottom: 1.5rem; white-space: pre-wrap; text-align: left;">${errorMessage}</p>
                         <button onclick="location.reload()" style="
-                            padding: 0.5rem 1rem; 
-                            background: #007bff; 
-                            color: white; 
-                            border: none; 
-                            border-radius: 4px; 
+                            padding: 0.5rem 1rem;
+                            background: #007bff;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
                             cursor: pointer;
                             margin-right: 0.5rem;
                         ">Refresh Page</button>
                         <button onclick="loadLenderDataFromCSV()" style="
-                            padding: 0.5rem 1rem; 
-                            background: #28a745; 
-                            color: white; 
-                            border: none; 
-                            border-radius: 4px; 
+                            padding: 0.5rem 1rem;
+                            background: #28a745;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
                             cursor: pointer;
                         ">Try Again</button>
                     </div>
@@ -867,7 +916,7 @@
                     tradingTime: document.getElementById('tradingTime'),
                     monthlyTurnover: document.getElementById('monthlyTurnover'),
                     headerResultsSummary: document.getElementById('headerResultsSummary'),
-                    resultsTableBody: document.getElementById('resultsTableBody')
+                    resultsList: document.getElementById('resultsList')
                 };
                 loadLenderDataFromCSV();
             } catch (error) {
@@ -879,15 +928,15 @@
         function parseData() {
             const lenderSet = new Set();
             const productTypeSet = new Set();
-            
+
             lenderData.forEach(lender => {
                 if (lender.LENDER && lender.LENDER.trim() !== '') {
                     lenderSet.add(lender.LENDER.trim());
                 }
-                
-                if (lender.PRODUCT_TYPE && lender.PRODUCT_TYPE.trim() !== '') {
-                    // Product Type is always a single value, so add it as-is.
-                    productTypeSet.add(lender.PRODUCT_TYPE.trim());
+
+                // Product Type is always a single value, so add it as-is.
+                if (lender.PRODUCT_TYPE && lender.PRODUCT_TYPE !== '') {
+                    productTypeSet.add(lender.PRODUCT_TYPE);
                 }
             });
 
@@ -899,11 +948,6 @@
                 const nameB = b.LENDER || '';
                 return nameA.localeCompare(nameB);
             });
-        }
-
-        function parseCurrency(currencyStr) {
-            if (!currencyStr) return 0;
-            return parseInt(currencyStr.toString().replace(/[£,]/g, '')) || 0;
         }
 
         function formatCurrency(amount) {
@@ -921,6 +965,10 @@
             return div.innerHTML;
         }
 
+        function safeId(text) {
+            return text.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+        }
+
         function initializeFilters() {
             setupMultiSelects();
             setupFilterListeners();
@@ -932,8 +980,8 @@
                 lenderDropdown.innerHTML = allLenders
                     .map(lender => `
                         <div class="multi-select-option" onclick="event.stopPropagation(); toggleLender('${escapeHtml(lender)}')">
-                            <input type="checkbox" id="lender_${lender.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}" onchange="event.stopPropagation(); toggleLender('${escapeHtml(lender)}')">
-                            <label for="lender_${lender.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}">${escapeHtml(lender)}</label>
+                            <input type="checkbox" id="lender_${safeId(lender)}" onclick="event.stopPropagation();" onchange="toggleLender('${escapeHtml(lender)}')">
+                            <label for="lender_${safeId(lender)}" onclick="event.stopPropagation();">${escapeHtml(lender)}</label>
                         </div>
                     `).join('');
             }
@@ -943,12 +991,11 @@
                 productDropdown.innerHTML = allProductTypes
                     .map(type => `
                         <div class="multi-select-option" onclick="event.stopPropagation(); toggleProductType('${escapeHtml(type)}')">
-                            <input type="checkbox" id="productType_${type.replace(/\s+/g, '_')}" onchange="event.stopPropagation(); toggleProductType('${escapeHtml(type)}')">
-                            <label for="productType_${type.replace(/\s+/g, '_')}">${escapeHtml(type)}</label>
+                            <input type="checkbox" id="productType_${safeId(type)}" onclick="event.stopPropagation();" onchange="toggleProductType('${escapeHtml(type)}')">
+                            <label for="productType_${safeId(type)}" onclick="event.stopPropagation();">${escapeHtml(type)}</label>
                         </div>
                     `).join('');
             }
-
 
             document.addEventListener('click', function(e) {
                 document.querySelectorAll('.multi-select').forEach(multiSelect => {
@@ -956,13 +1003,6 @@
                         const dropdown = multiSelect.querySelector('.multi-select-dropdown');
                         dropdown.classList.remove('show');
                         multiSelect.classList.remove('open');
-                    }
-                });
-                document.querySelectorAll('.single-select').forEach(singleSelect => {
-                    if (!singleSelect.contains(e.target)) {
-                        const dropdown = singleSelect.querySelector('.single-select-dropdown');
-                        dropdown.classList.remove('show');
-                        singleSelect.classList.remove('open');
                     }
                 });
             });
@@ -979,8 +1019,8 @@
         }
 
         function toggleLender(lender) {
-            const checkbox = document.getElementById(`lender_${lender.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}`);
-            
+            const checkbox = document.getElementById(`lender_${safeId(lender)}`);
+
             if (selectedLenders.includes(lender)) {
                 selectedLenders = selectedLenders.filter(l => l !== lender);
                 if (checkbox) checkbox.checked = false;
@@ -988,46 +1028,14 @@
                 selectedLenders.push(lender);
                 if (checkbox) checkbox.checked = true;
             }
-            
+
             updateMultiSelectDisplay('lender', selectedLenders);
             applyFilters();
         }
 
-        function toggleMultiSelect(type) {
-            const dropdown = document.getElementById(type + 'Dropdown');
-            const multiSelect = document.getElementById(type + 'Select');
-            const isVisible = dropdown.classList.contains('show');
-            
-            document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
-            document.querySelectorAll('.multi-select').forEach(ms => ms.classList.remove('open'));
-            document.querySelectorAll('.single-select-dropdown').forEach(d => d.classList.remove('show'));
-            document.querySelectorAll('.single-select').forEach(ss => ss.classList.remove('open'));
-            
-            if (!isVisible) {
-                dropdown.classList.add('show');
-                multiSelect.classList.add('open');
-            }
-        }
-
-        function toggleSingleSelect(type) {
-            const dropdown = document.getElementById(type + 'Dropdown');
-            const singleSelect = document.getElementById(type + 'Select');
-            const isVisible = dropdown.classList.contains('show');
-            
-            document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
-            document.querySelectorAll('.multi-select').forEach(ms => ms.classList.remove('open'));
-            document.querySelectorAll('.single-select-dropdown').forEach(d => d.classList.remove('show'));
-            document.querySelectorAll('.single-select').forEach(ss => ss.classList.remove('open'));
-            
-            if (!isVisible) {
-                dropdown.classList.add('show');
-                singleSelect.classList.add('open');
-            }
-        }
-
         function toggleProductType(type) {
-            const checkbox = document.getElementById(`productType_${type.replace(/\s+/g, '_')}`);
-            
+            const checkbox = document.getElementById(`productType_${safeId(type)}`);
+
             if (selectedProductTypes.includes(type)) {
                 selectedProductTypes = selectedProductTypes.filter(t => t !== type);
                 if (checkbox) checkbox.checked = false;
@@ -1035,56 +1043,58 @@
                 selectedProductTypes.push(type);
                 if (checkbox) checkbox.checked = true;
             }
-            
+
             updateMultiSelectDisplay('productType', selectedProductTypes);
             applyFilters();
         }
 
-
-        function selectSingleOption(type, value) {
-            if (type === 'pgRequirement') {
-                selectedPgRequirement = value;
-                updateSingleSelectDisplay('pgRequirement', value);
-            } else if (type === 'homeownerRequirement') {
-                selectedHomeownerRequirement = value;
-                updateSingleSelectDisplay('homeownerRequirement', value);
-            }
-            
+        function toggleMultiSelect(type) {
             const dropdown = document.getElementById(type + 'Dropdown');
-            const singleSelect = document.getElementById(type + 'Select');
-            dropdown.classList.remove('show');
-            singleSelect.classList.remove('open');
-            
+            const multiSelect = document.getElementById(type + 'Select');
+            const isVisible = dropdown.classList.contains('show');
+
+            document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
+            document.querySelectorAll('.multi-select').forEach(ms => ms.classList.remove('open'));
+
+            if (!isVisible) {
+                dropdown.classList.add('show');
+                multiSelect.classList.add('open');
+            }
+        }
+
+        function setRadioFilter(name, value) {
+            if (!(name in radioFilters)) return;
+            radioFilters[name] = value;
             applyFilters();
         }
 
+        // The display is a fixed 38px tall and cannot wrap, so show the first
+        // selection as a tag and collapse any others into a "+N" counter.
         function updateMultiSelectDisplay(type, selectedItems) {
             const display = document.querySelector(`#${type}Select .multi-select-display`);
-            const placeholder = type === 'lender' ? 'Select lender...' :
-                              'Select product type...';
-            
+            if (!display) return;
+
+            const placeholder = type === 'lender' ? 'Select lender...' : 'Select product type...';
+            const toggleFn = type === 'lender' ? 'toggleLender' : 'toggleProductType';
+
             if (selectedItems.length === 0) {
                 display.innerHTML = `<span class="multi-select-placeholder">${placeholder}</span>`;
-            } else {
-                display.innerHTML = selectedItems
-                    .map(item => `
-                        <span class="multi-select-tag">
-                            ${escapeHtml(item)}
-                            <span class="remove" onclick="toggle${type === 'lender' ? 'Lender' : 'ProductType'}('${escapeHtml(item)}')">&times;</span>
-                        </span>
-                    `).join('');
+                return;
             }
-        }
 
-        function updateSingleSelectDisplay(type, value) {
-            const display = document.querySelector(`#${type}Select .single-select-display`);
-            const placeholder = type === 'pgRequirement' ? 'Select PG required...' : 'Select homeowner required...';
-            
-            if (!value) {
-                display.innerHTML = `<span class="single-select-placeholder">${placeholder}</span>`;
-            } else {
-                display.innerHTML = escapeHtml(value.charAt(0).toUpperCase() + value.slice(1));
+            const first = selectedItems[0];
+            let html = `
+                <span class="multi-select-tag">
+                    ${escapeHtml(first)}
+                    <span class="remove" onclick="event.stopPropagation(); ${toggleFn}('${escapeHtml(first)}')">&times;</span>
+                </span>
+            `;
+
+            if (selectedItems.length > 1) {
+                html += `<span class="multi-select-count">+${selectedItems.length - 1}</span>`;
             }
+
+            display.innerHTML = html;
         }
 
         function clearAllFilters() {
@@ -1092,27 +1102,35 @@
             if (domElements.termMonths) domElements.termMonths.value = '';
             if (domElements.tradingTime) domElements.tradingTime.value = '';
             if (domElements.monthlyTurnover) domElements.monthlyTurnover.value = '';
-            
+
             selectedLenders = [];
             selectedProductTypes = [];
-            selectedPgRequirement = '';
-            selectedHomeownerRequirement = '';
-            
+            radioFilters = Object.assign({}, RADIO_DEFAULTS);
+
             updateMultiSelectDisplay('lender', selectedLenders);
             updateMultiSelectDisplay('productType', selectedProductTypes);
-            updateSingleSelectDisplay('pgRequirement', '');
-            updateSingleSelectDisplay('homeownerRequirement', '');
-            
-            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+
+            document.querySelectorAll('.multi-select-dropdown input[type="checkbox"]').forEach(checkbox => {
                 checkbox.checked = false;
             });
-            
+
+            // Reset every segmented control back to its "Any" option.
+            Object.keys(RADIO_DEFAULTS).forEach(name => {
+                const anyOption = document.getElementById(`${name}_any`);
+                if (anyOption) anyOption.checked = true;
+            });
+
             document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
             document.querySelectorAll('.multi-select').forEach(ms => ms.classList.remove('open'));
-            document.querySelectorAll('.single-select-dropdown').forEach(d => d.classList.remove('show'));
-            document.querySelectorAll('.single-select').forEach(ss => ss.classList.remove('open'));
-            
+
             applyFilters();
+        }
+
+        // Yes/No matching. A blank cell means "unknown", not "no", so it never
+        // satisfies an explicit Yes or No selection.
+        function matchesYesNo(selection, value) {
+            if (selection === 'any') return true;
+            return normaliseValue(value) === selection;
         }
 
         function applyFilters() {
@@ -1132,24 +1150,19 @@
                     if (termMonths !== null && (termMonths < lender.MIN_TERM || (lender.MAX_TERM > 0 && termMonths > lender.MAX_TERM))) return false;
                     if (tradingTime !== null && (lender.MIN_TRADING_IS_BLANK || tradingTime < lender.MIN_TRADING_TIME)) return false;
                     if (monthlyTurnover !== null && (lender.MIN_TURNOVER_IS_BLANK || monthlyTurnover < lender.MIN_MONTHLY_TURNOVER)) return false;
-                    
-                    if (selectedProductTypes.length > 0 && lender.PRODUCT_TYPE && lender.PRODUCT_TYPE.trim() !== '') {
+
+                    if (selectedProductTypes.length > 0 && lender.PRODUCT_TYPE && lender.PRODUCT_TYPE !== '') {
                         // Product Type is always a single value.
-                        const hasMatchingProduct = selectedProductTypes.includes(lender.PRODUCT_TYPE.trim());
-                        if (!hasMatchingProduct) return false;
+                        if (!selectedProductTypes.includes(lender.PRODUCT_TYPE)) return false;
                     }
-                    
-                    if (selectedPgRequirement) {
-                        const lenderPgReq = lender.PG_REQ ? lender.PG_REQ.toLowerCase() : '';
-                        if (selectedPgRequirement === 'yes' && lenderPgReq !== 'yes') return false;
-                        if (selectedPgRequirement === 'no' && lenderPgReq !== 'no') return false;
-                    }
-                    
-                    if (selectedHomeownerRequirement) {
-                        const lenderHomeowner = lender.HOMEOWNER_STATUS ? lender.HOMEOWNER_STATUS.toLowerCase() : '';
-                        if (selectedHomeownerRequirement === 'yes' && lenderHomeowner !== 'yes') return false;
-                        if (selectedHomeownerRequirement === 'no' && lenderHomeowner !== 'no') return false;
-                    }
+
+                    if (radioFilters.productSecurity !== 'any' &&
+                        lender.PRODUCT_SECURITY !== radioFilters.productSecurity) return false;
+
+                    if (!matchesYesNo(radioFilters.startUp, lender.START_UP)) return false;
+                    if (!matchesYesNo(radioFilters.pgRequirement, lender.PG_REQ)) return false;
+                    if (!matchesYesNo(radioFilters.debtConsolidation, lender.DEBT_CONSOLIDATION)) return false;
+                    if (!matchesYesNo(radioFilters.homeownerRequirement, lender.HOMEOWNER_STATUS)) return false;
 
                     return true;
                 });
@@ -1162,7 +1175,7 @@
 
         function renderResults() {
             updateResultsSummary();
-            renderTable();
+            renderCards();
         }
 
         function updateResultsSummary() {
@@ -1171,18 +1184,16 @@
             }
         }
 
-        function renderTable() {
+        function renderCards() {
             try {
-                if (!domElements.resultsTableBody) return;
-                
+                if (!domElements.resultsList) return;
+
                 if (filteredData.length === 0) {
-                    domElements.resultsTableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="no-results">
-                                <h3>No lenders match your criteria</h3>
-                                <p>Try adjusting your filters to see more results</p>
-                            </td>
-                        </tr>
+                    domElements.resultsList.innerHTML = `
+                        <div class="no-results">
+                            <h3>No lenders match your criteria</h3>
+                            <p>Try adjusting your filters to see more results</p>
+                        </div>
                     `;
                     return;
                 }
@@ -1193,15 +1204,13 @@
                     return nameA.localeCompare(nameB);
                 });
 
-                domElements.resultsTableBody.innerHTML = sortedData.map(lender => {
+                domElements.resultsList.innerHTML = sortedData.map(lender => {
 
                     // ─── FUNDING TERMS column ──────────────────────────
-                    // Loan range
                     const loanRangeShown = (lender.MIN_LOAN_NUM > 0 || lender.MAX_LOAN_NUM > 0);
                     const loanRangeHtml = loanRangeShown ?
                         `<div class="amount-range">${formatCurrency(lender.MIN_LOAN_NUM)} – ${formatCurrency(lender.MAX_LOAN_NUM)}</div>` : '';
 
-                    // Term range
                     const termRangeShown = (lender.MIN_TERM > 0 || lender.MAX_TERM > 0);
                     const termRangeHtml = termRangeShown ?
                         `<div class="term-range" style="margin-top: 0.25rem;">${lender.MIN_TERM} – ${lender.MAX_TERM} months</div>` : '';
@@ -1222,22 +1231,20 @@
                         rateHtml = `<div class="interest-range" style="margin-top: 0.25rem;">${escapeHtml(lender.FACTOR_RATE.trim())}</div>`;
                     }
 
-                    // Fees (free text, hide if blank)
                     const feesHtml = (lender.FEES && lender.FEES.trim() !== '') ?
                         `<div style="margin-top: 0.25rem;">${escapeHtml(lender.FEES.trim())}</div>` : '';
 
-                    // Commission (free text, hide if blank)
                     const commissionHtml = (lender.COMMISSION && lender.COMMISSION.trim() !== '') ?
                         `<div style="margin-top: 0.25rem;">${escapeHtml(lender.COMMISSION.trim())}</div>` : '';
 
                     // ─── LENDER column ─────────────────────────────────
-                    const productBadge = lender.PRODUCT_TYPE && lender.PRODUCT_TYPE.trim() !== '' ?
-                        `<span class="product-badge">${escapeHtml(lender.PRODUCT_TYPE.trim())}</span>` : '';
+                    const productBadge = lender.PRODUCT_TYPE && lender.PRODUCT_TYPE !== '' ?
+                        `<span class="product-badge">${escapeHtml(lender.PRODUCT_TYPE)}</span>` : '';
 
                     const submissionLink = lender.SUBMISSION && lender.SUBMISSION.trim() !== '' ?
                         (lender.SUBMISSION.includes('@') ?
                             `<a href="mailto:${escapeHtml(lender.SUBMISSION)}" class="submission-link">Email</a>` :
-                            `<a href="${escapeHtml(lender.SUBMISSION)}" target="_blank" class="submission-link">Portal</a>`) : '';
+                            `<a href="${escapeHtml(lender.SUBMISSION)}" target="_blank" rel="noopener" class="submission-link">Portal</a>`) : '';
 
                     const updatedLabel = (lender.LAST_UPDATED && lender.LAST_UPDATED.trim() !== '' &&
                         lender.LAST_UPDATED.toLowerCase() !== 'true' && lender.LAST_UPDATED.toLowerCase() !== 'false') ?
@@ -1252,7 +1259,7 @@
                         securityItems.push(`Homeowner Required: ${escapeHtml(lender.HOMEOWNER_STATUS)}`);
                     }
                     if (lender.OTHER_SECURITY && lender.OTHER_SECURITY.trim() !== '' &&
-                        lender.OTHER_SECURITY.trim().toLowerCase() !== 'n/a') {
+                        normaliseValue(lender.OTHER_SECURITY) !== 'n/a') {
                         const parts = lender.OTHER_SECURITY.split(';').map(s => s.trim()).filter(s => s.length > 0);
                         parts.forEach((p, i) => {
                             securityItems.push(i === 0 ? `Other Security: ${escapeHtml(p)}` : escapeHtml(p));
@@ -1261,7 +1268,6 @@
 
                     // ─── KEY U/W CRITERIA column ───────────────────────
                     const keyUwItems = [];
-                    // Product Name as first bullet (hidden if blank)
                     if (lender.PRODUCT_NAME && lender.PRODUCT_NAME.trim() !== '') {
                         keyUwItems.push(`Product Name: ${escapeHtml(lender.PRODUCT_NAME.trim())}`);
                     }
@@ -1271,7 +1277,7 @@
                     if (!lender.MIN_TURNOVER_IS_BLANK) {
                         keyUwItems.push(`Min Turnover: ${formatCurrency(lender.MIN_TURNOVER)}/month`);
                     }
-                    if (lender.EXISTING_LENDING && lender.EXISTING_LENDING.trim().toLowerCase() === 'yes') {
+                    if (normaliseValue(lender.EXISTING_LENDING) === 'yes') {
                         keyUwItems.push('Existing Lending Required: Yes');
                     }
                     if (lender.KEY_UW_CRITERIA && lender.KEY_UW_CRITERIA.trim() !== '') {
@@ -1286,51 +1292,49 @@
                     const uspItems = (lender.PRODUCT_USP && lender.PRODUCT_USP.trim() !== '') ?
                         lender.PRODUCT_USP.split(';').map(u => escapeHtml(u.trim())).filter(u => u.length > 0) : [];
 
-                    // ─── ROW HTML ──────────────────────────────────────
+                    // ─── CARD HTML ─────────────────────────────────────
                     return `
-                        <tr>
-                            <td style="text-align: left;">
+                        <div class="results-row lender-card">
+                            <div>
                                 <div class="lender-name">${escapeHtml(lender.LENDER)}</div>
                                 ${productBadge ? `<div style="margin-top: 0.25rem;">${productBadge}</div>` : ''}
                                 ${submissionLink ? `<div style="margin-top: 0.25rem;">${submissionLink}</div>` : ''}
                                 ${updatedLabel ? `<div style="margin-top: 0.25rem; font-size: 0.75rem; color: #6c757d;">${updatedLabel}</div>` : ''}
-                            </td>
-                            <td>
+                            </div>
+                            <div>
                                 ${loanRangeHtml}
                                 ${termRangeHtml}
                                 ${rateHtml}
                                 ${feesHtml}
                                 ${commissionHtml}
-                            </td>
-                            <td>
+                            </div>
+                            <div>
                                 ${securityItems.length > 0 ?
                                     `<ul class="security-required-list">${securityItems.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
-                            </td>
-                            <td>
+                            </div>
+                            <div>
                                 ${keyUwItems.length > 0 ?
                                     `<ul class="criteria-list">${keyUwItems.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
-                            </td>
-                            <td>
+                            </div>
+                            <div>
                                 ${adverseItems.length > 0 ?
                                     `<ul class="criteria-list">${adverseItems.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
-                            </td>
-                            <td>
+                            </div>
+                            <div>
                                 ${uspItems.length > 0 ?
                                     `<ul class="usp-list">${uspItems.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                     `;
                 }).join('');
             } catch (error) {
-                console.error('Error in renderTable:', error);
-                if (domElements.resultsTableBody) {
-                    domElements.resultsTableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="no-results">
-                                <h3>Error displaying results</h3>
-                                <p>Please try refreshing the page</p>
-                            </td>
-                        </tr>
+                console.error('Error in renderCards:', error);
+                if (domElements.resultsList) {
+                    domElements.resultsList.innerHTML = `
+                        <div class="no-results">
+                            <h3>Error displaying results</h3>
+                            <p>Please try refreshing the page</p>
+                        </div>
                     `;
                 }
             }
