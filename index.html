@@ -368,6 +368,13 @@
             white-space: nowrap;
         }
 
+        .commission-line {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            color: #172c40;
+            font-weight: 600;
+        }
+
         .submission-link {
             color: #007bff;
             text-decoration: none;
@@ -979,6 +986,19 @@
             }).format(amount);
         }
 
+        // Commission is sometimes free text ("Up to 10%") and sometimes a real
+        // Excel percentage, which dynamicTyping hands us as a decimal (1.5% ->
+        // 0.015). Render bare numbers as percentages; leave text untouched.
+        function formatCommission(value) {
+            const raw = (value === null || value === undefined) ? '' : value.toString().trim();
+            if (raw === '') return '';
+            if (!/^\d*\.?\d+$/.test(raw)) return raw;
+            const num = Number(raw);
+            if (isNaN(num)) return raw;
+            const pct = num <= 1 ? num * 100 : num;
+            return `${parseFloat(pct.toFixed(2))}%`;
+        }
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -1254,12 +1274,14 @@
                     const feesHtml = (lender.FEES && lender.FEES.trim() !== '') ?
                         `<div style="margin-top: 0.25rem;">${escapeHtml(lender.FEES.trim())}</div>` : '';
 
-                    const commissionHtml = (lender.COMMISSION && lender.COMMISSION.trim() !== '') ?
-                        `<div style="margin-top: 0.25rem;">${escapeHtml(lender.COMMISSION.trim())}</div>` : '';
-
                     // ─── LENDER column ─────────────────────────────────
                     const productBadge = lender.PRODUCT_TYPE && lender.PRODUCT_TYPE !== '' ?
                         `<span class="product-badge">${escapeHtml(lender.PRODUCT_TYPE)}</span>` : '';
+
+                    // Commission sits directly beneath the product badge.
+                    const commissionText = formatCommission(lender.COMMISSION);
+                    const commissionHtml = commissionText !== '' ?
+                        `<div class="commission-line">Commission: ${escapeHtml(commissionText)}</div>` : '';
 
                     const submissionLink = lender.SUBMISSION && lender.SUBMISSION.trim() !== '' ?
                         (lender.SUBMISSION.includes('@') ?
@@ -1318,6 +1340,7 @@
                             <div>
                                 <div class="lender-name">${escapeHtml(lender.LENDER)}</div>
                                 ${productBadge ? `<div style="margin-top: 0.25rem;">${productBadge}</div>` : ''}
+                                ${commissionHtml}
                                 ${submissionLink ? `<div style="margin-top: 0.25rem;">${submissionLink}</div>` : ''}
                                 ${updatedLabel ? `<div style="margin-top: 0.25rem; font-size: 0.75rem; color: #6c757d;">${updatedLabel}</div>` : ''}
                             </div>
@@ -1326,7 +1349,6 @@
                                 ${termRangeHtml}
                                 ${rateHtml}
                                 ${feesHtml}
-                                ${commissionHtml}
                             </div>
                             <div>
                                 ${securityItems.length > 0 ?
