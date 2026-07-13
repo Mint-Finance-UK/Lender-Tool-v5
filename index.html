@@ -541,7 +541,19 @@
                     <input type="number" id="monthlyTurnover" class="filter-input" placeholder="Enter monthly turnover..." min="0" max="5000000" step="1000">
                 </div>
 
-                <!-- Row 2: five radio groups, one blank cell -->
+                <!-- Row 2: six radio groups -->
+                <div class="filter-group">
+                    <label>Preferred Lender</label>
+                    <div class="segmented" role="radiogroup" aria-label="Preferred Lender">
+                        <input type="radio" name="preferredLender" id="preferredLender_any" value="any" checked onchange="setRadioFilter('preferredLender', this.value)">
+                        <label for="preferredLender_any">Any</label>
+                        <input type="radio" name="preferredLender" id="preferredLender_yes" value="yes" onchange="setRadioFilter('preferredLender', this.value)">
+                        <label for="preferredLender_yes">Yes</label>
+                        <input type="radio" name="preferredLender" id="preferredLender_no" value="no" onchange="setRadioFilter('preferredLender', this.value)">
+                        <label for="preferredLender_no">No</label>
+                    </div>
+                </div>
+
                 <div class="filter-group">
                     <label>Product Security</label>
                     <div class="segmented" role="radiogroup" aria-label="Product Security">
@@ -602,8 +614,6 @@
                     </div>
                 </div>
 
-                <div class="filter-group"></div>
-
             </div>
         </div>
     </div>
@@ -647,6 +657,7 @@
 
         // Radio filter state. 'any' means no filtering on that field.
         const RADIO_DEFAULTS = {
+            preferredLender: 'any',
             productSecurity: 'any',
             startUp: 'any',
             pgRequirement: 'any',
@@ -686,6 +697,15 @@
         function tidyValue(value) {
             if (value === null || value === undefined) return '';
             return value.toString().replace(/\s+/g, ' ').trim();
+        }
+
+        // The xlsx header was originally misspelled "Preffered Lender". Accept
+        // either spelling so the tool doesn't break if an older CSV is deployed.
+        function preferredLenderValue(row) {
+            if (row['Preferred Lender'] !== undefined && row['Preferred Lender'] !== null) {
+                return row['Preferred Lender'];
+            }
+            return row['Preffered Lender'];
         }
 
         // Helper: detect a row that is structurally empty (all values blank,
@@ -744,6 +764,11 @@
                         errors.push(`Row ${rowNum}: ${field} must be Yes/No or TRUE/FALSE (found: "${value}")`);
                     }
                 });
+
+                const preferred = preferredLenderValue(row);
+                if (preferred && !['yes', 'no', 'true', 'false', ''].includes(normaliseValue(preferred)) && preferred !== true && preferred !== false) {
+                    errors.push(`Row ${rowNum}: Preferred Lender must be Yes/No (found: "${preferred}")`);
+                }
 
                 const security = row['Product Security'];
                 if (security && !['secured', 'unsecured', ''].includes(normaliseValue(security))) {
@@ -862,6 +887,7 @@
                         SUBMISSION: (row['Submission'] || '').toString().trim(),
                         LAST_UPDATED: (row['Last Updated'] !== true && row['Last Updated'] !== false && row['Last Updated'] != null) ? row['Last Updated'].toString().trim() : '',
                         // Filter-only fields (not displayed on the card)
+                        PREFERRED_LENDER: normaliseValue(preferredLenderValue(row)),
                         PRODUCT_SECURITY: normaliseValue(row['Product Security']),
                         DEBT_CONSOLIDATION: normaliseValue(row['Debt Consolidation Option?']),
                         START_UP: normaliseValue(row['StartUp Option?']),
@@ -1199,6 +1225,7 @@
                     if (radioFilters.productSecurity !== 'any' &&
                         lender.PRODUCT_SECURITY !== radioFilters.productSecurity) return false;
 
+                    if (!matchesYesNo(radioFilters.preferredLender, lender.PREFERRED_LENDER)) return false;
                     if (!matchesYesNo(radioFilters.startUp, lender.START_UP)) return false;
                     if (!matchesYesNo(radioFilters.pgRequirement, lender.PG_REQ)) return false;
                     if (!matchesYesNo(radioFilters.debtConsolidation, lender.DEBT_CONSOLIDATION)) return false;
